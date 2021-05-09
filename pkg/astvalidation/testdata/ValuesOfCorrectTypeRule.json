@@ -1,0 +1,1047 @@
+{
+  "tests": [
+    {
+      "name": "GoodIntValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: 2)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "GoodNegativeIntValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: -2)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "GoodBooleanValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            booleanArgField(booleanArg: true)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "GoodStringValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringArgField(stringArg: \"foo\")\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "GoodFloatValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            floatArgField(floatArg: 1.1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "GoodNegativeFloatValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            floatArgField(floatArg: -1.1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IntIntoFloat",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            floatArgField(floatArg: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IntIntoID",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            idArgField(idArg: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "StringIntoID",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            idArgField(idArg: \"someIdString\")\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "GoodEnumValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: SIT)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "EnumWithUndefinedValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            enumArgField(enumArg: UNKNOWN)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "EnumWithNullValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            enumArgField(enumArg: NO_FUR)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NullIntoNullableType",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: null)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "OnlyShowsOneSetOfSuggestionsAtATimePreferringTypes",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog(a: null, b: null, c:{ requiredField: true, intField: null }) {\n            name\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IntIntoString",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringArgField(stringArg: 1)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: 1",
+          "locations": [
+            {
+              "line": 4,
+              "column": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FloatIntoString",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringArgField(stringArg: 1.0)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: 1.0",
+          "locations": [
+            {
+              "line": 4,
+              "column": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BooleanIntoString",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringArgField(stringArg: true)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: true",
+          "locations": [
+            {
+              "line": 4,
+              "column": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnquotedStringIntoString",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringArgField(stringArg: BAR)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: BAR",
+          "locations": [
+            {
+              "line": 4,
+              "column": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StringIntoInt",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: \"3\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: \"3\"",
+          "locations": [
+            {
+              "line": 4,
+              "column": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BigIntIntoInt",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: 829384293849283498239482938)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non 32-bit signed integer value: 829384293849283498239482938",
+          "locations": [
+            {
+              "line": 4,
+              "column": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnquotedStringIntoInt",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: FOO)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: FOO",
+          "locations": [
+            {
+              "line": 4,
+              "column": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SimpleFloatIntoInt",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: 3.0)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: 3.0",
+          "locations": [
+            {
+              "line": 4,
+              "column": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FloatIntoInt",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            intArgField(intArg: 3.333)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: 3.333",
+          "locations": [
+            {
+              "line": 4,
+              "column": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StringIntoFloat",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            floatArgField(floatArg: \"3.333\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Float cannot represent non numeric value: \"3.333\"",
+          "locations": [
+            {
+              "line": 4,
+              "column": 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BooleanIntoFloat",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            floatArgField(floatArg: true)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Float cannot represent non numeric value: true",
+          "locations": [
+            {
+              "line": 4,
+              "column": 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnquotedIntoFloat",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            floatArgField(floatArg: FOO)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Float cannot represent non numeric value: FOO",
+          "locations": [
+            {
+              "line": 4,
+              "column": 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IntIntoBoolean",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            booleanArgField(booleanArg: 2)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Boolean cannot represent a non boolean value: 2",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FloatIntoBoolean",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            booleanArgField(booleanArg: 1.0)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Boolean cannot represent a non boolean value: 1.0",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StringIntoBoolean",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            booleanArgField(booleanArg: \"true\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Boolean cannot represent a non boolean value: \"true\"",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnquotedIntoBoolean",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            booleanArgField(booleanArg: TRUE)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Boolean cannot represent a non boolean value: TRUE",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FloatIntoID",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            idArgField(idArg: 1.0)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "ID cannot represent a non-string and non-integer value: 1.0",
+          "locations": [
+            {
+              "line": 4,
+              "column": 31
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BooleanIntoID",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            idArgField(idArg: true)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "ID cannot represent a non-string and non-integer value: true",
+          "locations": [
+            {
+              "line": 4,
+              "column": 31
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnquotedIntoID",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            idArgField(idArg: SOMETHING)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "ID cannot represent a non-string and non-integer value: SOMETHING",
+          "locations": [
+            {
+              "line": 4,
+              "column": 31
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IntIntoEnum",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: 2)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Enum \"DogCommand\" cannot represent non-enum value: 2.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FloatIntoEnum",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: 1.0)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Enum \"DogCommand\" cannot represent non-enum value: 1.0.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StringIntoEnum",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: \"SIT\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Enum \"DogCommand\" cannot represent non-enum value: \"SIT\". Did you mean the enum value \"SIT\"?",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BooleanIntoEnum",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: true)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Enum \"DogCommand\" cannot represent non-enum value: true.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownEnumValueIntoEnum",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: JUGGLE)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Value \"JUGGLE\" does not exist in \"DogCommand\" enum.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DifferentCaseEnumValueIntoEnum",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            doesKnowCommand(dogCommand: sit)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Value \"sit\" does not exist in \"DogCommand\" enum. Did you mean the enum value \"SIT\"?",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GoodListValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringListArgField(stringListArg: [\"one\", null, \"two\"])\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "EmptyListValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringListArgField(stringListArg: [])\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NullValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringListArgField(stringListArg: null)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "SingleValueIntoList",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringListArgField(stringListArg: \"one\")\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IncorrectItemType",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringListArgField(stringListArg: [\"one\", 2])\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: 2",
+          "locations": [
+            {
+              "line": 4,
+              "column": 55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SingleValueOfIncorrectType",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            stringListArgField(stringListArg: 1)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: 1",
+          "locations": [
+            {
+              "line": 4,
+              "column": 47
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ArgOnOptionalArg",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            isHouseTrained(atOtherHomes: true)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NoArgOnOptionalArg",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            isHouseTrained\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleArgs",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req1: 1, req2: 2)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleArgsReverseOrder",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req2: 2, req1: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NoArgsOnMultipleOptional",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOpts\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "OneArgOnMultipleOptional",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOpts(opt1: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "SecondArgOnMultipleOptional",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOpts(opt2: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleRequiredArgsOnMixedList",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOptAndReq(req1: 3, req2: 4)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleRequiredAndOneOptionalArgOnMixedList",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOptAndReq(req1: 3, req2: 4, opt1: 5)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "AllRequiredAndOptionalArgsOnMixedList",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOptAndReq(req1: 3, req2: 4, opt1: 5, opt2: 6)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IncorrectValueType",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req2: \"two\", req1: \"one\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: \"two\"",
+          "locations": [
+            {
+              "line": 4,
+              "column": 32
+            }
+          ]
+        },
+        {
+          "message": "Int cannot represent non-integer value: \"one\"",
+          "locations": [
+            {
+              "line": 4,
+              "column": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IncorrectValueAndMissingArgument(ProvidedRequiredArgumentsRule)",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req1: \"one\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: \"one\"",
+          "locations": [
+            {
+              "line": 4,
+              "column": 32
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "NullValue",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req1: null)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Expected value of type \"Int!\", found null.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 32
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "OptionalArgDespiteRequiredFieldInType",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "PartialObjectOnlyRequired",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: { requiredField: true })\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "PartialObjectRequiredFieldCanBeFalsy",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: { requiredField: false })\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "PartialObjectIncludingRequired",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: { requiredField: true, intField: 4 })\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "FullObject",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: {\n              requiredField: true,\n              intField: 4,\n              stringField: \"foo\",\n              booleanField: false,\n              stringListField: [\"one\", \"two\"]\n            })\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "FullObjectWithFieldsInDifferentOrder",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: {\n              stringListField: [\"one\", \"two\"],\n              booleanField: false,\n              requiredField: true,\n              stringField: \"foo\",\n              intField: 4,\n            })\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "PartialObjectMissingRequired",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: { intField: 4 })\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"ComplexInput.requiredField\" of required type \"Boolean!\" was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PartialObjectInvalidFieldType",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: {\n              stringListField: [\"one\", 2],\n              requiredField: true,\n            })\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: 2",
+          "locations": [
+            {
+              "line": 5,
+              "column": 40
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PartialObjectNullToNon-nullField",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: {\n              requiredField: true,\n              nonNullField: null,\n            })\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Expected value of type \"Boolean!\", found null.",
+          "locations": [
+            {
+              "line": 6,
+              "column": 29
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PartialObjectUnknownFieldArg",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            complexArgField(complexArg: {\n              requiredField: true,\n              invalidField: \"value\"\n            })\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"invalidField\" is not defined by type \"ComplexInput\". Did you mean \"intField\"?",
+          "locations": [
+            {
+              "line": 6,
+              "column": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ReportsOriginalErrorForCustomScalarWhichThrows",
+      "rule": "ValuesOfCorrectType",
+      "schema": 30,
+      "query": "{ invalidArg(arg: 123) }",
+      "errors": [
+        {
+          "message": "Expected value of type \"Invalid\", found 123; Invalid scalar is always invalid: 123",
+          "locations": [
+            {
+              "line": 1,
+              "column": 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ReportsErrorForCustomScalarThatReturnsUndefined",
+      "rule": "ValuesOfCorrectType",
+      "schema": 31,
+      "query": "{ invalidArg(arg: 123) }",
+      "errors": [
+        {
+          "message": "Expected value of type \"CustomScalar\", found 123.",
+          "locations": [
+            {
+              "line": 1,
+              "column": 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AllowsCustomScalarToAcceptComplexLiterals",
+      "rule": "ValuesOfCorrectType",
+      "schema": 32,
+      "query": "\n          {\n            test1: anyArg(arg: 123)\n            test2: anyArg(arg: \"abc\")\n            test3: anyArg(arg: [123, \"abc\"])\n            test4: anyArg(arg: {deep: [123, \"abc\"]})\n          }\n        ",
+      "errors": []
+    },
+    {
+      "name": "WithDirectivesOfValidTypes",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog @include(if: true) {\n            name\n          }\n          human @skip(if: false) {\n            name\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "WithDirectiveWithIncorrectTypes",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        {\n          dog @include(if: \"yes\") {\n            name @skip(if: ENUM)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Boolean cannot represent a non boolean value: \"yes\"",
+          "locations": [
+            {
+              "line": 3,
+              "column": 28
+            }
+          ]
+        },
+        {
+          "message": "Boolean cannot represent a non boolean value: ENUM",
+          "locations": [
+            {
+              "line": 4,
+              "column": 28
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VariablesWithValidDefaultValues",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query WithDefaultValues(\n          $a: Int = 1,\n          $b: String = \"ok\",\n          $c: ComplexInput = { requiredField: true, intField: 3 }\n          $d: Int! = 123\n        ) {\n          dog { name }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "VariablesWithValidDefaultNullValues",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query WithDefaultValues(\n          $a: Int = null,\n          $b: String = null,\n          $c: ComplexInput = { requiredField: true, intField: null }\n        ) {\n          dog { name }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "VariablesWithInvalidDefaultNullValues",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query WithDefaultValues(\n          $a: Int! = null,\n          $b: String! = null,\n          $c: ComplexInput = { requiredField: null, intField: null }\n        ) {\n          dog { name }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Expected value of type \"Int!\", found null.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 22
+            }
+          ]
+        },
+        {
+          "message": "Expected value of type \"String!\", found null.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 25
+            }
+          ]
+        },
+        {
+          "message": "Expected value of type \"Boolean!\", found null.",
+          "locations": [
+            {
+              "line": 5,
+              "column": 47
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VariablesWithInvalidDefaultValues",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query InvalidDefaultValues(\n          $a: Int = \"one\",\n          $b: String = 4,\n          $c: ComplexInput = \"NotVeryComplex\"\n        ) {\n          dog { name }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Int cannot represent non-integer value: \"one\"",
+          "locations": [
+            {
+              "line": 3,
+              "column": 21
+            }
+          ]
+        },
+        {
+          "message": "String cannot represent a non string value: 4",
+          "locations": [
+            {
+              "line": 4,
+              "column": 24
+            }
+          ]
+        },
+        {
+          "message": "Expected value of type \"ComplexInput\", found \"NotVeryComplex\".",
+          "locations": [
+            {
+              "line": 5,
+              "column": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VariablesWithComplexInvalidDefaultValues",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query WithDefaultValues(\n          $a: ComplexInput = { requiredField: 123, intField: \"abc\" }\n        ) {\n          dog { name }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Boolean cannot represent a non boolean value: 123",
+          "locations": [
+            {
+              "line": 3,
+              "column": 47
+            }
+          ]
+        },
+        {
+          "message": "Int cannot represent non-integer value: \"abc\"",
+          "locations": [
+            {
+              "line": 3,
+              "column": 62
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ComplexVariablesMissingRequiredField",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query MissingRequiredField($a: ComplexInput = {intField: 3}) {\n          dog { name }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"ComplexInput.requiredField\" of required type \"Boolean!\" was not provided.",
+          "locations": [
+            {
+              "line": 2,
+              "column": 55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ListVariablesWithInvalidItem",
+      "rule": "ValuesOfCorrectType",
+      "schema": 0,
+      "query": "\n        query InvalidItem($a: [String] = [\"one\", 2]) {\n          dog { name }\n        }\n      ",
+      "errors": [
+        {
+          "message": "String cannot represent a non string value: 2",
+          "locations": [
+            {
+              "line": 2,
+              "column": 50
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

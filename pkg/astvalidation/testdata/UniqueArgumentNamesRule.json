@@ -1,0 +1,177 @@
+{
+  "tests": [
+    {
+      "name": "NoArgumentsOnField",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "NoArgumentsOnDirective",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field @directive\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ArgumentOnField",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field(arg: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ArgumentOnDirective",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field @directive(arg: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "SameArgumentOnTwoFields",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        one: field(arg: \"value\")\n        two: field(arg: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "SameArgumentOnFieldAndDirective",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field(arg: \"value\") @directive(arg: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "SameArgumentOnTwoDirectives",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field @directive1(arg: \"value\") @directive2(arg: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "MultipleFieldArguments",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field(arg1: \"value\", arg2: \"value\", arg3: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "MultipleDirectiveArguments",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field @directive(arg1: \"value\", arg2: \"value\", arg3: \"value\")\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "DuplicateFieldArguments",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field(arg1: \"value\", arg1: \"value\")\n      }\n    ",
+      "errors": [
+        {
+          "message": "There can be only one argument named \"arg1\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ManyDuplicateFieldArguments",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field(arg1: \"value\", arg1: \"value\", arg1: \"value\")\n      }\n    ",
+      "errors": [
+        {
+          "message": "There can be only one argument named \"arg1\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 30
+            }
+          ]
+        },
+        {
+          "message": "There can be only one argument named \"arg1\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DuplicateDirectiveArguments",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field @directive(arg1: \"value\", arg1: \"value\")\n      }\n    ",
+      "errors": [
+        {
+          "message": "There can be only one argument named \"arg1\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 26
+            },
+            {
+              "line": 3,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ManyDuplicateDirectiveArguments",
+      "rule": "UniqueArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        field @directive(arg1: \"value\", arg1: \"value\", arg1: \"value\")\n      }\n    ",
+      "errors": [
+        {
+          "message": "There can be only one argument named \"arg1\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 26
+            },
+            {
+              "line": 3,
+              "column": 41
+            }
+          ]
+        },
+        {
+          "message": "There can be only one argument named \"arg1\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 26
+            },
+            {
+              "line": 3,
+              "column": 56
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

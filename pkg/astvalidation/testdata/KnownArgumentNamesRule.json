@@ -1,0 +1,306 @@
+{
+  "tests": [
+    {
+      "name": "SingleArgIsKnown",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment argOnRequiredArg on Dog {\n        doesKnowCommand(dogCommand: SIT)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "MultipleArgsAreKnown",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment multipleArgs on ComplicatedArgs {\n        multipleReqs(req1: 1, req2: 2)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresArgsOfUnknownFields",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment argOnUnknownField on Dog {\n        unknownField(unknownArg: SIT)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "MultipleArgsInReverseOrderAreKnown",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment multipleArgsReverseOrder on ComplicatedArgs {\n        multipleReqs(req2: 2, req1: 1)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "NoArgsOnOptionalArg",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment noArgOnOptionalArg on Dog {\n        isHouseTrained\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ArgsAreKnownDeeply",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog {\n          doesKnowCommand(dogCommand: SIT)\n        }\n        human {\n          pet {\n            ... on Dog {\n              doesKnowCommand(dogCommand: SIT)\n            }\n          }\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "DirectiveArgsAreKnown",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog @skip(if: true)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "FieldArgsAreInvalid",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog @skip(unless: true)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unless\" on directive \"@skip\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DirectiveWithoutArgsIsValid",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog @onField\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ArgPassedToDirectiveWithoutArgIsReported",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog @onField(if: true)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"if\" on directive \"@onField\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 22
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MisspelledDirectiveArgsAreReported",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog @skip(iff: true)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"iff\" on directive \"@skip\". Did you mean \"if\"?",
+          "locations": [
+            {
+              "line": 3,
+              "column": 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "InvalidArgName",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment invalidArgName on Dog {\n        doesKnowCommand(unknown: true)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unknown\" on field \"Dog.doesKnowCommand\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 25
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MisspelledArgNameIsReported",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment invalidArgName on Dog {\n        doesKnowCommand(DogCommand: true)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"DogCommand\" on field \"Dog.doesKnowCommand\". Did you mean \"dogCommand\"?",
+          "locations": [
+            {
+              "line": 3,
+              "column": 25
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownArgsAmongstKnownArgs",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      fragment oneGoodArgOneInvalidArg on Dog {\n        doesKnowCommand(whoKnows: 1, dogCommand: SIT, unknown: true)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"whoKnows\" on field \"Dog.doesKnowCommand\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 25
+            }
+          ]
+        },
+        {
+          "message": "Unknown argument \"unknown\" on field \"Dog.doesKnowCommand\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownArgsDeeply",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n      {\n        dog {\n          doesKnowCommand(unknown: true)\n        }\n        human {\n          pet {\n            ... on Dog {\n              doesKnowCommand(unknown: true)\n            }\n          }\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unknown\" on field \"Dog.doesKnowCommand\".",
+          "locations": [
+            {
+              "line": 4,
+              "column": 27
+            }
+          ]
+        },
+        {
+          "message": "Unknown argument \"unknown\" on field \"Dog.doesKnowCommand\".",
+          "locations": [
+            {
+              "line": 9,
+              "column": 31
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "KnownArgOnDirectiveDefinedInsideSDL",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @test(arg: \"\")\n        }\n\n        directive @test(arg: String) on FIELD_DEFINITION\n      ",
+      "errors": []
+    },
+    {
+      "name": "UnknownArgOnDirectiveDefinedInsideSDL",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @test(unknown: \"\")\n        }\n\n        directive @test(arg: String) on FIELD_DEFINITION\n      ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unknown\" on directive \"@test\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 29
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MisspelledArgNameIsReportedOnDirectiveDefinedInsideSDL",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @test(agr: \"\")\n        }\n\n        directive @test(arg: String) on FIELD_DEFINITION\n      ",
+      "errors": [
+        {
+          "message": "Unknown argument \"agr\" on directive \"@test\". Did you mean \"arg\"?",
+          "locations": [
+            {
+              "line": 3,
+              "column": 29
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownArgOnStandardDirective",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @deprecated(unknown: \"\")\n        }\n      ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unknown\" on directive \"@deprecated\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownArgOnOverriddenStandardDirective",
+      "rule": "KnownArgumentNames",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @deprecated(reason: \"\")\n        }\n        directive @deprecated(arg: String) on FIELD\n      ",
+      "errors": [
+        {
+          "message": "Unknown argument \"reason\" on directive \"@deprecated\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownArgOnDirectiveDefinedInSchemaExtension",
+      "rule": "KnownArgumentNames",
+      "schema": 1,
+      "query": "\n          directive @test(arg: String) on OBJECT\n\n          extend type Query  @test(unknown: \"\")\n        ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unknown\" on directive \"@test\".",
+          "locations": [
+            {
+              "line": 4,
+              "column": 36
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UnknownArgOnDirectiveUsedInSchemaExtension",
+      "rule": "KnownArgumentNames",
+      "schema": 2,
+      "query": "\n          extend type Query @test(unknown: \"\")\n        ",
+      "errors": [
+        {
+          "message": "Unknown argument \"unknown\" on directive \"@test\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 35
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

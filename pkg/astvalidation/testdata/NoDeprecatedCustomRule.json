@@ -1,0 +1,186 @@
+{
+  "tests": [
+    {
+      "name": "IgnoresFieldsThatAreNotDeprecated",
+      "rule": "NoDeprecated",
+      "schema": 10,
+      "query": "\n        {\n          normalField\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresUnknownFields",
+      "rule": "NoDeprecated",
+      "schema": 10,
+      "query": "\n        {\n          unknownField\n        }\n\n        fragment UnknownFragment on UnknownType {\n          deprecatedField\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "ReportsErrorWhenADeprecatedFieldIsSelected",
+      "rule": "NoDeprecated",
+      "schema": 10,
+      "query": "\n        {\n          deprecatedField\n        }\n\n        fragment QueryFragment on Query {\n          deprecatedField\n        }\n      ",
+      "errors": [
+        {
+          "message": "The field Query.deprecatedField is deprecated. Some field reason.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 11
+            }
+          ]
+        },
+        {
+          "message": "The field Query.deprecatedField is deprecated. Some field reason.",
+          "locations": [
+            {
+              "line": 7,
+              "column": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IgnoresArgumentsThatAreNotDeprecated",
+      "rule": "NoDeprecated",
+      "schema": 11,
+      "query": "\n        {\n          normalField(normalArg: \"\")\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresUnknownArguments",
+      "rule": "NoDeprecated",
+      "schema": 11,
+      "query": "\n        {\n          someField(unknownArg: \"\")\n          unknownField(deprecatedArg: \"\")\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "ReportsErrorWhenADeprecatedArgumentIsUsed",
+      "rule": "NoDeprecated",
+      "schema": 11,
+      "query": "\n        {\n          someField(deprecatedArg: \"\")\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"Query.someField\" argument \"deprecatedArg\" is deprecated. Some arg reason.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IgnoresArgumentsThatAreNotDeprecated",
+      "rule": "NoDeprecated",
+      "schema": 12,
+      "query": "\n        {\n          someField @someDirective(normalArg: \"\")\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresUnknownArguments",
+      "rule": "NoDeprecated",
+      "schema": 12,
+      "query": "\n        {\n          someField @someDirective(unknownArg: \"\")\n          someField @unknownDirective(deprecatedArg: \"\")\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "ReportsErrorWhenADeprecatedArgumentIsUsed",
+      "rule": "NoDeprecated",
+      "schema": 12,
+      "query": "\n        {\n          someField @someDirective(deprecatedArg: \"\")\n        }\n      ",
+      "errors": [
+        {
+          "message": "Directive \"@someDirective\" argument \"deprecatedArg\" is deprecated. Some arg reason.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 36
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IgnoresInputFieldsThatAreNotDeprecated",
+      "rule": "NoDeprecated",
+      "schema": 13,
+      "query": "\n        {\n          someField(\n            someArg: { normalField: \"\" }\n          ) @someDirective(someArg: { normalField: \"\" })\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresUnknownInputFields",
+      "rule": "NoDeprecated",
+      "schema": 13,
+      "query": "\n        {\n          someField(\n            someArg: { unknownField: \"\" }\n          )\n\n          someField(\n            unknownArg: { unknownField: \"\" }\n          )\n\n          unknownField(\n            unknownArg: { unknownField: \"\" }\n          )\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "ReportsErrorWhenADeprecatedInputFieldIsUsed",
+      "rule": "NoDeprecated",
+      "schema": 13,
+      "query": "\n        {\n          someField(\n            someArg: { deprecatedField: \"\" }\n          ) @someDirective(someArg: { deprecatedField: \"\" })\n        }\n      ",
+      "errors": [
+        {
+          "message": "The input field InputType.deprecatedField is deprecated. Some input field reason.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 24
+            }
+          ]
+        },
+        {
+          "message": "The input field InputType.deprecatedField is deprecated. Some input field reason.",
+          "locations": [
+            {
+              "line": 5,
+              "column": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IgnoresEnumValuesThatAreNotDeprecated",
+      "rule": "NoDeprecated",
+      "schema": 14,
+      "query": "\n        {\n          normalField(enumArg: NORMAL_VALUE)\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresUnknownEnumValues",
+      "rule": "NoDeprecated",
+      "schema": 14,
+      "query": "\n        query (\n          $unknownValue: EnumType = UNKNOWN_VALUE\n          $unknownType: UnknownType = UNKNOWN_VALUE\n        ) {\n          someField(enumArg: UNKNOWN_VALUE)\n          someField(unknownArg: UNKNOWN_VALUE)\n          unknownField(unknownArg: UNKNOWN_VALUE)\n        }\n\n        fragment SomeFragment on Query {\n          someField(enumArg: UNKNOWN_VALUE)\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "ReportsErrorWhenADeprecatedEnumValueIsUsed",
+      "rule": "NoDeprecated",
+      "schema": 14,
+      "query": "\n        query (\n          $variable: EnumType = DEPRECATED_VALUE\n        ) {\n          someField(enumArg: DEPRECATED_VALUE)\n        }\n      ",
+      "errors": [
+        {
+          "message": "The enum value \"EnumType.DEPRECATED_VALUE\" is deprecated. Some enum reason.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 33
+            }
+          ]
+        },
+        {
+          "message": "The enum value \"EnumType.DEPRECATED_VALUE\" is deprecated. Some enum reason.",
+          "locations": [
+            {
+              "line": 5,
+              "column": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

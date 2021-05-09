@@ -1,0 +1,92 @@
+{
+  "tests": [
+    {
+      "name": "NoSchema",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 0,
+      "query": "\n      type Query {\n        foo: String\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "OneSchemaDefinition",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 0,
+      "query": "\n      schema {\n        query: Foo\n      }\n\n      type Foo {\n        foo: String\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "MultipleSchemaDefinitions",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 0,
+      "query": "\n      schema {\n        query: Foo\n      }\n\n      type Foo {\n        foo: String\n      }\n\n      schema {\n        mutation: Foo\n      }\n\n      schema {\n        subscription: Foo\n      }\n    ",
+      "errors": [
+        {
+          "message": "Must provide only one schema definition.",
+          "locations": [
+            {
+              "line": 10,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "message": "Must provide only one schema definition.",
+          "locations": [
+            {
+              "line": 14,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DefineSchemaInSchemaExtension",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 7,
+      "query": "\n        schema {\n          query: Foo\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "RedefineSchemaInSchemaExtension",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 8,
+      "query": "\n        schema {\n          mutation: Foo\n        }\n      ",
+      "errors": [
+        {
+          "message": "Cannot define a new schema within a schema extension.",
+          "locations": [
+            {
+              "line": 2,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RedefineImplicitSchemaInSchemaExtension",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 9,
+      "query": "\n        schema {\n          mutation: Foo\n        }\n      ",
+      "errors": [
+        {
+          "message": "Cannot define a new schema within a schema extension.",
+          "locations": [
+            {
+              "line": 2,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ExtendSchemaInSchemaExtension",
+      "rule": "SchemaDefinitionShouldBeAlone",
+      "schema": 9,
+      "query": "\n        extend schema {\n          mutation: Foo\n        }\n      ",
+      "errors": []
+    }
+  ]
+}

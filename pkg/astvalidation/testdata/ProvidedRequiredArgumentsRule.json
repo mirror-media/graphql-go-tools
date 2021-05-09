@@ -1,0 +1,280 @@
+{
+  "tests": [
+    {
+      "name": "IgnoresUnknownArguments",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n      {\n        dog {\n          isHouseTrained(unknownArgument: true)\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ArgOnOptionalArg",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            isHouseTrained(atOtherHomes: true)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NoArgOnOptionalArg",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          dog {\n            isHouseTrained\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NoArgOnNon-nullFieldWithDefault",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            nonNullFieldWithDefault\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleArgs",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req1: 1, req2: 2)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleArgsReverseOrder",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req2: 2, req1: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "NoArgsOnMultipleOptional",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOpts\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "OneArgOnMultipleOptional",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOpts(opt1: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "SecondArgOnMultipleOptional",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOpts(opt2: 1)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleRequiredArgsOnMixedList",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOptAndReq(req1: 3, req2: 4)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MultipleRequiredAndOneOptionalArgOnMixedList",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOptAndReq(req1: 3, req2: 4, opt1: 5)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "AllRequiredAndOptionalArgsOnMixedList",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleOptAndReq(req1: 3, req2: 4, opt1: 5, opt2: 6)\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "MissingOneNon-nullableArgument",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req2: 2)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"multipleReqs\" argument \"req1\" of type \"Int!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MissingMultipleNon-nullableArguments",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"multipleReqs\" argument \"req1\" of type \"Int!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 13
+            }
+          ]
+        },
+        {
+          "message": "Field \"multipleReqs\" argument \"req2\" of type \"Int!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IncorrectValueAndMissingArgument",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          complicatedArgs {\n            multipleReqs(req1: \"one\")\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Field \"multipleReqs\" argument \"req2\" of type \"Int!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IgnoresUnknownDirectives",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          dog @unknown\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "WithDirectivesOfValidTypes",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          dog @include(if: true) {\n            name\n          }\n          human @skip(if: false) {\n            name\n          }\n        }\n      ",
+      "errors": []
+    },
+    {
+      "name": "WithDirectiveWithMissingTypes",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        {\n          dog @include {\n            name @skip\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Directive \"@include\" argument \"if\" of type \"Boolean!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            }
+          ]
+        },
+        {
+          "message": "Directive \"@skip\" argument \"if\" of type \"Boolean!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 18
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MissingOptionalArgsOnDirectiveDefinedInsideSDL",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @test\n        }\n\n        directive @test(arg1: String, arg2: String! = \"\") on FIELD_DEFINITION\n      ",
+      "errors": []
+    },
+    {
+      "name": "MissingArgOnDirectiveDefinedInsideSDL",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @test\n        }\n\n        directive @test(arg: String!) on FIELD_DEFINITION\n      ",
+      "errors": [
+        {
+          "message": "Directive \"@test\" argument \"arg\" of type \"String!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 23
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MissingArgOnStandardDirective",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @include\n        }\n      ",
+      "errors": [
+        {
+          "message": "Directive \"@include\" argument \"if\" of type \"Boolean!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 23
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MissingArgOnOverriddenStandardDirective",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 0,
+      "query": "\n        type Query {\n          foo: String @deprecated\n        }\n        directive @deprecated(reason: String!) on FIELD\n      ",
+      "errors": [
+        {
+          "message": "Directive \"@deprecated\" argument \"reason\" of type \"String!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 23
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MissingArgOnDirectiveDefinedInSchemaExtension",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 1,
+      "query": "\n          directive @test(arg: String!) on OBJECT\n\n          extend type Query  @test\n        ",
+      "errors": [
+        {
+          "message": "Directive \"@test\" argument \"arg\" of type \"String!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MissingArgOnDirectiveUsedInSchemaExtension",
+      "rule": "ProvidedRequiredArguments",
+      "schema": 20,
+      "query": "\n          extend type Query @test\n        ",
+      "errors": [
+        {
+          "message": "Directive \"@test\" argument \"arg\" of type \"String!\" is required, but it was not provided.",
+          "locations": [
+            {
+              "line": 2,
+              "column": 29
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

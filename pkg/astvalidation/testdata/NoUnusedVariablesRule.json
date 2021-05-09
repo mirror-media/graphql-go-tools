@@ -1,0 +1,175 @@
+{
+  "tests": [
+    {
+      "name": "UsesAllVariables",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query ($a: String, $b: String, $c: String) {\n        field(a: $a, b: $b, c: $c)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "UsesAllVariablesDeeply",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String, $b: String, $c: String) {\n        field(a: $a) {\n          field(b: $b) {\n            field(c: $c)\n          }\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "UsesAllVariablesDeeplyInInlineFragments",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String, $b: String, $c: String) {\n        ... on Type {\n          field(a: $a) {\n            field(b: $b) {\n              ... on Type {\n                field(c: $c)\n              }\n            }\n          }\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "UsesAllVariablesInFragments",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String, $b: String, $c: String) {\n        ...FragA\n      }\n      fragment FragA on Type {\n        field(a: $a) {\n          ...FragB\n        }\n      }\n      fragment FragB on Type {\n        field(b: $b) {\n          ...FragC\n        }\n      }\n      fragment FragC on Type {\n        field(c: $c)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "VariableUsedByFragmentInMultipleOperations",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String) {\n        ...FragA\n      }\n      query Bar($b: String) {\n        ...FragB\n      }\n      fragment FragA on Type {\n        field(a: $a)\n      }\n      fragment FragB on Type {\n        field(b: $b)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "VariableUsedByRecursiveFragment",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String) {\n        ...FragA\n      }\n      fragment FragA on Type {\n        field(a: $a) {\n          ...FragA\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "VariableNotUsed",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query ($a: String, $b: String, $c: String) {\n        field(a: $a, b: $b)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$c\" is never used.",
+          "locations": [
+            {
+              "line": 2,
+              "column": 38
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MultipleVariablesNotUsed",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String, $b: String, $c: String) {\n        field(b: $b)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$a\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 17
+            }
+          ]
+        },
+        {
+          "message": "Variable \"$c\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VariableNotUsedInFragments",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String, $b: String, $c: String) {\n        ...FragA\n      }\n      fragment FragA on Type {\n        field(a: $a) {\n          ...FragB\n        }\n      }\n      fragment FragB on Type {\n        field(b: $b) {\n          ...FragC\n        }\n      }\n      fragment FragC on Type {\n        field\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$c\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MultipleVariablesNotUsedInFragments",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($a: String, $b: String, $c: String) {\n        ...FragA\n      }\n      fragment FragA on Type {\n        field {\n          ...FragB\n        }\n      }\n      fragment FragB on Type {\n        field(b: $b) {\n          ...FragC\n        }\n      }\n      fragment FragC on Type {\n        field\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$a\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 17
+            }
+          ]
+        },
+        {
+          "message": "Variable \"$c\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 41
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VariableNotUsedByUnreferencedFragment",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($b: String) {\n        ...FragA\n      }\n      fragment FragA on Type {\n        field(a: $a)\n      }\n      fragment FragB on Type {\n        field(b: $b)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$b\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 17
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VariableNotUsedByFragmentUsedByOtherOperation",
+      "rule": "NoUnusedVariables",
+      "schema": 0,
+      "query": "\n      query Foo($b: String) {\n        ...FragA\n      }\n      query Bar($a: String) {\n        ...FragB\n      }\n      fragment FragA on Type {\n        field(a: $a)\n      }\n      fragment FragB on Type {\n        field(b: $b)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$b\" is never used in operation \"Foo\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 17
+            }
+          ]
+        },
+        {
+          "message": "Variable \"$a\" is never used in operation \"Bar\".",
+          "locations": [
+            {
+              "line": 5,
+              "column": 17
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

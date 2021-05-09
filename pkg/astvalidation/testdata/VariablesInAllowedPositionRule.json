@@ -1,0 +1,298 @@
+{
+  "tests": [
+    {
+      "name": "Boolean=>Boolean",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($booleanArg: Boolean)\n      {\n        complicatedArgs {\n          booleanArgField(booleanArg: $booleanArg)\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "Boolean=>BooleanWithinFragment",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      fragment booleanArgFrag on ComplicatedArgs {\n        booleanArgField(booleanArg: $booleanArg)\n      }\n      query Query($booleanArg: Boolean)\n      {\n        complicatedArgs {\n          ...booleanArgFrag\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "WorksWithNoSmallNumbersOfFieldSuggestions",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($booleanArg: Boolean)\n      {\n        complicatedArgs {\n          ...booleanArgFrag\n        }\n      }\n      fragment booleanArgFrag on ComplicatedArgs {\n        booleanArgField(booleanArg: $booleanArg)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "Boolean!=>Boolean",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($nonNullBooleanArg: Boolean!)\n      {\n        complicatedArgs {\n          booleanArgField(booleanArg: $nonNullBooleanArg)\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "Boolean!=>BooleanWithinFragment",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      fragment booleanArgFrag on ComplicatedArgs {\n        booleanArgField(booleanArg: $nonNullBooleanArg)\n      }\n\n      query Query($nonNullBooleanArg: Boolean!)\n      {\n        complicatedArgs {\n          ...booleanArgFrag\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "[String]=>[String]",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringListVar: [String])\n      {\n        complicatedArgs {\n          stringListArgField(stringListArg: $stringListVar)\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "[String!]=>[String]",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringListVar: [String!])\n      {\n        complicatedArgs {\n          stringListArgField(stringListArg: $stringListVar)\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "String=>[String]InItemPosition",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringVar: String)\n      {\n        complicatedArgs {\n          stringListArgField(stringListArg: [$stringVar])\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "String!=>[String]InItemPosition",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringVar: String!)\n      {\n        complicatedArgs {\n          stringListArgField(stringListArg: [$stringVar])\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ComplexInput=>ComplexInput",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($complexVar: ComplexInput)\n      {\n        complicatedArgs {\n          complexArgField(complexArg: $complexVar)\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ComplexInput=>ComplexInputInFieldPosition",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($boolVar: Boolean = false)\n      {\n        complicatedArgs {\n          complexArgField(complexArg: {requiredArg: $boolVar})\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "Boolean!=>Boolean!InDirective",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($boolVar: Boolean!)\n      {\n        dog @include(if: $boolVar)\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "Int=>Int!",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($intArg: Int) {\n        complicatedArgs {\n          nonNullIntArgField(nonNullIntArg: $intArg)\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$intArg\" of type \"Int\" used in position expecting type \"Int!\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 19
+            },
+            {
+              "line": 4,
+              "column": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Int=>Int!WithinFragment",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      fragment nonNullIntArgFieldFrag on ComplicatedArgs {\n        nonNullIntArgField(nonNullIntArg: $intArg)\n      }\n\n      query Query($intArg: Int) {\n        complicatedArgs {\n          ...nonNullIntArgFieldFrag\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$intArg\" of type \"Int\" used in position expecting type \"Int!\".",
+          "locations": [
+            {
+              "line": 6,
+              "column": 19
+            },
+            {
+              "line": 3,
+              "column": 43
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Int=>Int!WithinNestedFragment",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      fragment outerFrag on ComplicatedArgs {\n        ...nonNullIntArgFieldFrag\n      }\n\n      fragment nonNullIntArgFieldFrag on ComplicatedArgs {\n        nonNullIntArgField(nonNullIntArg: $intArg)\n      }\n\n      query Query($intArg: Int) {\n        complicatedArgs {\n          ...outerFrag\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$intArg\" of type \"Int\" used in position expecting type \"Int!\".",
+          "locations": [
+            {
+              "line": 10,
+              "column": 19
+            },
+            {
+              "line": 7,
+              "column": 43
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StringOverBoolean",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringVar: String) {\n        complicatedArgs {\n          booleanArgField(booleanArg: $stringVar)\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$stringVar\" of type \"String\" used in position expecting type \"Boolean\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 19
+            },
+            {
+              "line": 4,
+              "column": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "String=>[String]",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringVar: String) {\n        complicatedArgs {\n          stringListArgField(stringListArg: $stringVar)\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$stringVar\" of type \"String\" used in position expecting type \"[String]\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 19
+            },
+            {
+              "line": 4,
+              "column": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Boolean=>Boolean!InDirective",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($boolVar: Boolean) {\n        dog @include(if: $boolVar)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$boolVar\" of type \"Boolean\" used in position expecting type \"Boolean!\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 19
+            },
+            {
+              "line": 3,
+              "column": 26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "String=>Boolean!InDirective",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringVar: String) {\n        dog @include(if: $stringVar)\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$stringVar\" of type \"String\" used in position expecting type \"Boolean!\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 19
+            },
+            {
+              "line": 3,
+              "column": 26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[String]=>[String!]",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n      query Query($stringListVar: [String])\n      {\n        complicatedArgs {\n          stringListNonNullArgField(stringListNonNullArg: $stringListVar)\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "Variable \"$stringListVar\" of type \"[String]\" used in position expecting type \"[String!]\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 19
+            },
+            {
+              "line": 5,
+              "column": 59
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Int=>Int!FailsWhenVariableProvidesNullDefaultValue",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n        query Query($intVar: Int = null) {\n          complicatedArgs {\n            nonNullIntArgField(nonNullIntArg: $intVar)\n          }\n        }\n      ",
+      "errors": [
+        {
+          "message": "Variable \"$intVar\" of type \"Int\" used in position expecting type \"Int!\".",
+          "locations": [
+            {
+              "line": 2,
+              "column": 21
+            },
+            {
+              "line": 4,
+              "column": 47
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Int=>Int!WhenVariableProvidesNon-nullDefaultValue",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n        query Query($intVar: Int = 1) {\n          complicatedArgs {\n            nonNullIntArgField(nonNullIntArg: $intVar)\n          }\n        }",
+      "errors": []
+    },
+    {
+      "name": "Int=>Int!WhenOptionalArgumentProvidesDefaultValue",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n        query Query($intVar: Int) {\n          complicatedArgs {\n            nonNullFieldWithDefault(nonNullIntArg: $intVar)\n          }\n        }",
+      "errors": []
+    },
+    {
+      "name": "Boolean=>Boolean!InDirectiveWithDefaultValueWithOption",
+      "rule": "VariablesAreInAllowedPositions",
+      "schema": 0,
+      "query": "\n        query Query($boolVar: Boolean = false) {\n          dog @include(if: $boolVar)\n        }",
+      "errors": []
+    }
+  ]
+}

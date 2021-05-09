@@ -1,0 +1,83 @@
+{
+  "tests": [
+    {
+      "name": "ValidSubscription",
+      "rule": "SubscriptionsWithSingleField",
+      "schema": 0,
+      "query": "\n      subscription ImportantEmails {\n        importantEmails\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "FailsWithMoreThanOneRootField",
+      "rule": "SubscriptionsWithSingleField",
+      "schema": 0,
+      "query": "\n      subscription ImportantEmails {\n        importantEmails\n        notImportantEmails\n      }\n    ",
+      "errors": [
+        {
+          "message": "Subscription \"ImportantEmails\" must select only one top level field.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailsWithMoreThanOneRootFieldIncludingIntrospection",
+      "rule": "SubscriptionsWithSingleField",
+      "schema": 0,
+      "query": "\n      subscription ImportantEmails {\n        importantEmails\n        __typename\n      }\n    ",
+      "errors": [
+        {
+          "message": "Subscription \"ImportantEmails\" must select only one top level field.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailsWithManyMoreThanOneRootField",
+      "rule": "SubscriptionsWithSingleField",
+      "schema": 0,
+      "query": "\n      subscription ImportantEmails {\n        importantEmails\n        notImportantEmails\n        spamEmails\n      }\n    ",
+      "errors": [
+        {
+          "message": "Subscription \"ImportantEmails\" must select only one top level field.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 9
+            },
+            {
+              "line": 5,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FailsWithMoreThanOneRootFieldInAnonymousSubscriptions",
+      "rule": "SubscriptionsWithSingleField",
+      "schema": 0,
+      "query": "\n      subscription {\n        importantEmails\n        notImportantEmails\n      }\n    ",
+      "errors": [
+        {
+          "message": "Anonymous Subscription must select only one top level field.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

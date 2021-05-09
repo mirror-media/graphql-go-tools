@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.13.0",
+    "@babel/preset-env": "^7.14.1",
+    "chai": "^4.3.4"
+  }
+}

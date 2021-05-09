@@ -1,0 +1,437 @@
+{
+  "tests": [
+    {
+      "name": "NoDirectives",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type {\n        field\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "UniqueDirectivesInDifferentLocations",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type @directiveA {\n        field @directiveB\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "UniqueDirectivesInSameLocations",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type @directiveA @directiveB {\n        field @directiveA @directiveB\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "SameDirectivesInDifferentLocations",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type @directiveA {\n        field @directiveA\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "SameDirectivesInSimilarLocations",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type {\n        field @directive\n        field @directive\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "RepeatableDirectivesInSameLocation",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type @repeatable @repeatable {\n        field @repeatable @repeatable\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "UnknownDirectivesMustBeIgnored",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      type Test @unknown @unknown {\n        field: String! @unknown @unknown\n      }\n\n      extend type Test @unknown {\n        anotherField: String!\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "DuplicateDirectivesInOneLocation",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type {\n        field @directive @directive\n      }\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@directive\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ManyDuplicateDirectivesInOneLocation",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type {\n        field @directive @directive @directive\n      }\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@directive\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 26
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@directive\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DifferentDuplicateDirectivesInOneLocation",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type {\n        field @directiveA @directiveB @directiveA @directiveB\n      }\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@directiveA\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 39
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@directiveB\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 27
+            },
+            {
+              "line": 3,
+              "column": 51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DuplicateDirectivesInManyLocations",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 22,
+      "query": "\n      fragment Test on Type @directive @directive {\n        field @directive @directive\n      }\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@directive\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 2,
+              "column": 29
+            },
+            {
+              "line": 2,
+              "column": 40
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@directive\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 3,
+              "column": 15
+            },
+            {
+              "line": 3,
+              "column": 26
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DuplicateDirectivesOnSDLDefinitions",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 0,
+      "query": "\n      directive @nonRepeatable on\n        SCHEMA | SCALAR | OBJECT | INTERFACE | UNION | INPUT_OBJECT\n\n      schema @nonRepeatable @nonRepeatable { query: Dummy }\n\n      scalar TestScalar @nonRepeatable @nonRepeatable\n      type TestObject @nonRepeatable @nonRepeatable\n      interface TestInterface @nonRepeatable @nonRepeatable\n      union TestUnion @nonRepeatable @nonRepeatable\n      input TestInput @nonRepeatable @nonRepeatable\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 5,
+              "column": 14
+            },
+            {
+              "line": 5,
+              "column": 29
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 7,
+              "column": 25
+            },
+            {
+              "line": 7,
+              "column": 40
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 8,
+              "column": 23
+            },
+            {
+              "line": 8,
+              "column": 38
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 9,
+              "column": 31
+            },
+            {
+              "line": 9,
+              "column": 46
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 10,
+              "column": 23
+            },
+            {
+              "line": 10,
+              "column": 38
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 11,
+              "column": 23
+            },
+            {
+              "line": 11,
+              "column": 38
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DuplicateDirectivesOnSDLExtensions",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 0,
+      "query": "\n      directive @nonRepeatable on\n        SCHEMA | SCALAR | OBJECT | INTERFACE | UNION | INPUT_OBJECT\n\n      extend schema @nonRepeatable @nonRepeatable\n\n      extend scalar TestScalar @nonRepeatable @nonRepeatable\n      extend type TestObject @nonRepeatable @nonRepeatable\n      extend interface TestInterface @nonRepeatable @nonRepeatable\n      extend union TestUnion @nonRepeatable @nonRepeatable\n      extend input TestInput @nonRepeatable @nonRepeatable\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 5,
+              "column": 21
+            },
+            {
+              "line": 5,
+              "column": 36
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 7,
+              "column": 32
+            },
+            {
+              "line": 7,
+              "column": 47
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 8,
+              "column": 30
+            },
+            {
+              "line": 8,
+              "column": 45
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 9,
+              "column": 38
+            },
+            {
+              "line": 9,
+              "column": 53
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 10,
+              "column": 30
+            },
+            {
+              "line": 10,
+              "column": 45
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 11,
+              "column": 30
+            },
+            {
+              "line": 11,
+              "column": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DuplicateDirectivesBetweenSDLDefinitionsAndExtensions",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 0,
+      "query": "\n      directive @nonRepeatable on SCHEMA\n\n      schema @nonRepeatable { query: Dummy }\n      extend schema @nonRepeatable\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 14
+            },
+            {
+              "line": 5,
+              "column": 21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LimitsLotsOfTypeSuggestions",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 0,
+      "query": "\n      directive @nonRepeatable on SCALAR\n\n      scalar TestScalar @nonRepeatable\n      extend scalar TestScalar @nonRepeatable\n      scalar TestScalar @nonRepeatable\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 25
+            },
+            {
+              "line": 5,
+              "column": 32
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 25
+            },
+            {
+              "line": 6,
+              "column": 25
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SortTypeSuggestionsBasedOnInheritanceOrder",
+      "rule": "DirectivesAreUniquePerLocation",
+      "schema": 0,
+      "query": "\n      directive @nonRepeatable on OBJECT\n\n      extend type TestObject @nonRepeatable\n      type TestObject @nonRepeatable\n      extend type TestObject @nonRepeatable\n    ",
+      "errors": [
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 30
+            },
+            {
+              "line": 5,
+              "column": 23
+            }
+          ]
+        },
+        {
+          "message": "The directive \"@nonRepeatable\" can only be used once at this location.",
+          "locations": [
+            {
+              "line": 4,
+              "column": 30
+            },
+            {
+              "line": 6,
+              "column": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

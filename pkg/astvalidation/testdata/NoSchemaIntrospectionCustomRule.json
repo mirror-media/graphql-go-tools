@@ -1,0 +1,113 @@
+{
+  "tests": [
+    {
+      "name": "IgnoresValidFieldsIncluding__typename",
+      "rule": "ProhibitIntrospectionQueries",
+      "schema": 15,
+      "query": "\n      {\n        someQuery {\n          __typename\n          someField\n        }\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "IgnoresFieldsNotInTheSchema",
+      "rule": "ProhibitIntrospectionQueries",
+      "schema": 15,
+      "query": "\n      {\n        __introspect\n      }\n    ",
+      "errors": []
+    },
+    {
+      "name": "ReportsErrorWhenAFieldWithAnIntrospectionTypeIsRequested",
+      "rule": "ProhibitIntrospectionQueries",
+      "schema": 15,
+      "query": "\n      {\n        __schema {\n          queryType {\n            name\n          }\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"__schema\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 9
+            }
+          ]
+        },
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"queryType\".",
+          "locations": [
+            {
+              "line": 4,
+              "column": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ReportsErrorWhenAFieldWithAnIntrospectionTypeIsRequestedAndAliased",
+      "rule": "ProhibitIntrospectionQueries",
+      "schema": 15,
+      "query": "\n      {\n        s: __schema {\n          queryType {\n            name\n          }\n        }\n      }\n      ",
+      "errors": [
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"__schema\".",
+          "locations": [
+            {
+              "line": 3,
+              "column": 9
+            }
+          ]
+        },
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"queryType\".",
+          "locations": [
+            {
+              "line": 4,
+              "column": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ReportsErrorWhenUsingAFragmentWithAFieldWithAnIntrospectionType",
+      "rule": "ProhibitIntrospectionQueries",
+      "schema": 15,
+      "query": "\n      {\n        ...QueryFragment\n      }\n\n      fragment QueryFragment on Query {\n        __schema {\n          queryType {\n            name\n          }\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"__schema\".",
+          "locations": [
+            {
+              "line": 7,
+              "column": 9
+            }
+          ]
+        },
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"queryType\".",
+          "locations": [
+            {
+              "line": 8,
+              "column": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ReportsErrorForNon-standardIntrospectionFields",
+      "rule": "ProhibitIntrospectionQueries",
+      "schema": 15,
+      "query": "\n      {\n        someQuery {\n          introspectionField\n        }\n      }\n    ",
+      "errors": [
+        {
+          "message": "GraphQL introspection has been disabled, but the requested query contained the field \"introspectionField\".",
+          "locations": [
+            {
+              "line": 4,
+              "column": 11
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
