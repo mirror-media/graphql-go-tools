@@ -11,13 +11,14 @@ import (
 // 	name: String
 // }
 type InterfaceTypeDefinition struct {
-	Description         Description        // optional, describes the interface
-	InterfaceLiteral    position.Position  // interface
-	Name                ByteSliceReference // e.g. NamedEntity
-	HasDirectives       bool
-	Directives          DirectiveList // optional, e.g. @foo
-	HasFieldDefinitions bool
-	FieldsDefinition    FieldDefinitionList // optional, e.g. { name: String }
+	Description          Description        // optional, describes the interface
+	InterfaceLiteral     position.Position  // interface
+	Name                 ByteSliceReference // e.g. NamedEntity
+	ImplementsInterfaces TypeList           // e.g implements Bar & Baz
+	HasDirectives        bool
+	Directives           DirectiveList // optional, e.g. @foo
+	HasFieldDefinitions  bool
+	FieldsDefinition     FieldDefinitionList // optional, e.g. { name: String }
 }
 
 func (d *Document) InterfaceTypeDefinitionNameBytes(ref int) ByteSlice {

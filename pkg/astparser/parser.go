@@ -959,6 +959,8 @@ func (p *Parser) parseFieldDefinitionList() (list ast.FieldDefinitionList) {
 				refsInitialized = true
 			}
 			list.Refs = append(list.Refs, ref)
+		case keyword.COMMENT:
+			p.read()
 		default:
 			p.errUnexpectedToken(p.read())
 			return
@@ -1200,6 +1202,9 @@ func (p *Parser) parseInterfaceTypeDefinition(description *ast.Description) {
 	}
 	interfaceTypeDefinition.InterfaceLiteral = p.mustReadIdentKey(identkeyword.INTERFACE).TextPosition
 	interfaceTypeDefinition.Name = p.mustRead(keyword.IDENT).Literal
+	if p.peekEqualsIdentKey(identkeyword.IMPLEMENTS) {
+		interfaceTypeDefinition.ImplementsInterfaces = p.parseImplementsInterfaces()
+	}
 	if p.peekEquals(keyword.AT) {
 		interfaceTypeDefinition.Directives = p.parseDirectiveList()
 		interfaceTypeDefinition.HasDirectives = len(interfaceTypeDefinition.Directives.Refs) > 0
