@@ -24,6 +24,18 @@ type DefinitionValidator struct {
 	walker astvisitor.Walker
 }
 
+func NewDefinitionValidator(rules []Rule) *DefinitionValidator {
+	validator := &DefinitionValidator{
+		walker: astvisitor.NewWalker(48),
+	}
+
+	for _, rule := range rules {
+		validator.RegisterRule(rule)
+	}
+
+	return validator
+}
+
 func (d *DefinitionValidator) RegisterRule(rule Rule) {
 	rule(&d.walker)
 }

@@ -43,6 +43,18 @@ func DefaultOperationValidator() *OperationValidator {
 	return &validator
 }
 
+func NewOperationValidator(rules []Rule) *OperationValidator {
+	validator := OperationValidator{
+		walker: astvisitor.NewWalker(48),
+	}
+
+	for _, rule := range rules {
+		validator.RegisterRule(rule)
+	}
+
+	return &validator
+}
+
 // ValidationState is the outcome of a validation
 type ValidationState int
 
@@ -845,14 +857,14 @@ func (v *valuesVisitor) valueSatisfiesEnum(value ast.Value, node ast.Node) bool 
 		if v.Ancestors[0].Kind != ast.NodeKindOperationDefinition {
 			return false
 		}
-		definition,ok := v.operation.VariableDefinitionByNameAndOperation(v.Ancestors[0].Ref,name)
+		definition, ok := v.operation.VariableDefinitionByNameAndOperation(v.Ancestors[0].Ref, name)
 		if !ok {
 			return false
 		}
 		variableType := v.operation.VariableDefinitions[definition].Type
 		actualTypeName := v.operation.ResolveTypeNameBytes(variableType)
 		expectedTypeName := node.NameBytes(v.definition)
-		return bytes.Equal(actualTypeName,expectedTypeName)
+		return bytes.Equal(actualTypeName, expectedTypeName)
 	}
 	if value.Kind != ast.ValueKindEnum {
 		return false
