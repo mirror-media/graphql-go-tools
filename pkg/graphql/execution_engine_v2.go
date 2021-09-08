@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"sync"
 
 	lru "github.com/hashicorp/golang-lru"
@@ -143,6 +145,33 @@ func WithAfterFetchHook(hook resolve.AfterFetchHook) ExecutionOptionsV2 {
 	}
 }
 
+func WithAdditionalHttpHeaders(headers http.Header, excludeByKeys ...string) ExecutionOptionsV2 {
+	return func(ctx *internalExecutionContext) {
+		if len(headers) == 0 {
+			return
+		}
+
+		if ctx.resolveContext.Request.Header == nil {
+			ctx.resolveContext.Request.Header = make(http.Header)
+		}
+
+		excludeMap := make(map[string]bool)
+		for _, key := range excludeByKeys {
+			excludeMap[key] = true
+		}
+
+		for headerKey, headerValues := range headers {
+			if excludeMap[headerKey] {
+				continue
+			}
+
+			for _, headerValue := range headerValues {
+				ctx.resolveContext.Request.Header.Add(headerKey, headerValue)
+			}
+		}
+	}
+}
+
 func NewExecutionEngineV2(ctx context.Context, logger abstractlogger.Logger, engineConfig EngineV2Configuration) (*ExecutionEngineV2, error) {
 	executionPlanCache, err := lru.New(1024)
 	if err != nil {
@@ -191,8 +220,13 @@ func (e *ExecutionEngineV2) Execute(ctx context.Context, operation *Request, wri
 		options[i](execContext)
 	}
 
+	operationType, err := operation.OperationType()
+	if err != nil {
+		return err
+	}
+
 	var report operationreport.Report
-	cachedPlan := e.getCachedPlan(execContext, &operation.document, &e.config.schema.document, operation.OperationName, &report)
+	cachedPlan := e.getCachedPlan(execContext, &operation.document, &e.config.schema.document, operation.OperationName, operationType, &report)
 	if report.HasErrors() {
 		return report
 	}
@@ -209,7 +243,7 @@ func (e *ExecutionEngineV2) Execute(ctx context.Context, operation *Request, wri
 	return err
 }
 
-func (e *ExecutionEngineV2) getCachedPlan(ctx *internalExecutionContext, operation, definition *ast.Document, operationName string, report *operationreport.Report) plan.Plan {
+func (e *ExecutionEngineV2) getCachedPlan(ctx *internalExecutionContext, operation, definition *ast.Document, operationName string, operationType OperationType, report *operationreport.Report) plan.Plan {
 
 	hash := pool.Hash64.Get()
 	hash.Reset()
@@ -218,6 +252,18 @@ func (e *ExecutionEngineV2) getCachedPlan(ctx *internalExecutionContext, operati
 	if err != nil {
 		report.AddInternalError(err)
 		return nil
+	}
+
+	if operationType == OperationTypeSubscription {
+		for headerKey, headerValues := range ctx.resolveContext.Request.Header {
+			joinedHeaderValues := strings.Join(headerValues, ";")
+			headerString := fmt.Sprintf("%s:%s", headerKey, joinedHeaderValues)
+			_, err := hash.Write([]byte(headerString))
+			if err != nil {
+				report.AddInternalError(err)
+				return nil
+			}
+		}
 	}
 
 	cacheKey := hash.Sum64()
